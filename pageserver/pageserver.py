@@ -46,7 +46,7 @@ def listen(portnum):
 def serve(sock, func):
     """
     Respond to connections on sock.
-    Args:
+    Args
        sock:  A server socket, already listening on some port.
        func:  a function that takes a client socket and does something with it
     Returns: nothing
@@ -91,15 +91,6 @@ def respond(sock):
     log.info("Request was {}\n***\n".format(request))
 
     parts = request.split()
-    #print(parts)
-    #print(format(request))
-    #if len(parts) > 1 and parts[0] == "GET" and parts [1] == '/':
-    #    transmit(STATUS_OK, sock)
-    #    transmit(CAT, sock)
-    #else:
-    #    log.info("Unhandled request: {}".format(request))
-    #    transmit(STATUS_NOT_IMPLEMENTED, sock)
-    #    transmit("\nI don't handle this request: {}\n".format(request), sock)
 
     if len(parts) > 1 and parts[0] == "GET":
         #check if parts[1] is a '/'
@@ -119,11 +110,12 @@ def respond(sock):
             if illegal:
                 log.info("Illegal characters: {}".format(request), sock)
                 transmit(STATUS_FORBIDDEN, sock)
-                transmit("403 Forbidden \n Illegal characters '..' or '~'", sock)
+                transmit("403 Forbidden \nIllegal characters '..' or '~'", sock)
             else:
                 #if not check if file exists
                 path = "./pages" + parts[1]
                 if os.path.exists(path):
+                    log.info("File exists: {}\n".format(request), sock)
                     f = open(f"./pages{parts[1]}", 'r')
                     f = f.read()
                     transmit(STATUS_OK, sock)
