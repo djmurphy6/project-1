@@ -94,38 +94,37 @@ def respond(sock):
 
     if len(parts) > 1 and parts[0] == "GET":
         #check if parts[1] is a '/'
-        if parts[1] =='/':
-            transmit(STATUS_OK, sock)
+        if parts[1] =='/':              # if there is nothing behind "localhost:port#
+            transmit(STATUS_OK, sock)   # transmit cat
             transmit(CAT, sock)
         else:
             #check for illegal characters
             illegal = 0
-            for i in range(len(parts[1])):
-                #if illegal return error code 403
+            for i in range(len(parts[1])):      # for loop to go through each character
                 if parts[1][i] == '~':
                    illegal += 1
-                if parts[1][i] == '.' and (i < len(parts[1]) and parts[1][i+1] == '.'):
+                if parts[1][i] == '.' and (i < len(parts[1]) and parts[1][i+1] == '.'): # check for '..'
                     illegal += 1
                     break
+            #if illegal transmit error code 403
             if illegal:
                 log.info("Illegal characters: {}".format(request), sock)
                 transmit(STATUS_FORBIDDEN, sock)
                 transmit("403 Forbidden \nIllegal characters '..' or '~'", sock)
             else:
-                #if not check if file exists
-                path = "./pages" + parts[1]
-                if os.path.exists(path):
+                #if legal check if file exists
+                path = "./pages" + parts[1] # create path to the entered file
+                if os.path.exists(path):    # check if file exists
                     log.info("File exists: {}\n".format(request), sock)
-                    f = open(f"./pages{parts[1]}", 'r')
-                    f = f.read()
-                    transmit(STATUS_OK, sock)
-                    transmit(f, sock)
+                    f = open(f"./pages{parts[1]}", 'r')     # open file
+                    f = f.read()                            # read file
+                    transmit(STATUS_OK, sock)               
+                    transmit(f, sock)                       # transmit file
                 else:
+                    # if file does not exist transmit error code 404
                     log.info("File does not exist: {}\n".format(request), sock)
                     transmit(STATUS_NOT_FOUND, sock)
                     transmit("404 Not found \nA file with that name could not be found", sock)
-                    #if it can be found open it and transmit
-                    #if it can not be found return 404
     else:
         #return 401
         log.info("Unhandled request: {}".format(request))
