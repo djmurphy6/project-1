@@ -92,6 +92,10 @@ def respond(sock):
 
     parts = request.split()
 
+    # get path to page folder
+    options = get_options()
+    docroot = options.DOCROOT
+
     if len(parts) > 1 and parts[0] == "GET":
         #check if parts[1] is a '/'
         if parts[1] =='/':              # if there is nothing behind "localhost:port#
@@ -113,7 +117,7 @@ def respond(sock):
                 transmit("403 Forbidden \nIllegal characters '..' or '~'", sock)
             else:
                 #if legal check if file exists
-                path = "./pages" + parts[1] # create path to the entered file
+                path = docroot + parts[1] # create path to the entered file
                 if os.path.exists(path):    # check if file exists
                     log.info("File exists: {}\n".format(request), sock)
                     f = open(f"./pages{parts[1]}", 'r')     # open file
