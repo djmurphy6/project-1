@@ -120,7 +120,7 @@ def respond(sock):
                 path = docroot + parts[1] # create path to the entered file
                 if os.path.exists(path):    # check if file exists
                     log.info("File exists: {}\n".format(request), sock)
-                    f = open(f"./pages{parts[1]}", 'r')     # open file
+                    f = open(path, 'r')     # open file
                     f = f.read()                            # read file
                     transmit(STATUS_OK, sock)               
                     transmit(f, sock)                       # transmit file
